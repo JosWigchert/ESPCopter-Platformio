@@ -76,7 +76,7 @@ void scanShields(){
 }
 
 
-void mainSetup(){
+void mainSetup(uint16_t wifi_channel = 1){
 
   // Set Pin Mode
   Serial.begin(921600);// 921600   
@@ -218,6 +218,6 @@ void mainSetup(){
   esp.greenLed_Digital(true);
 
 
-  setupWiFi();
+  setupWiFi(wifi_channel);
    
 }

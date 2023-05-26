@@ -403,7 +403,7 @@ String debugOutput(){
  return "test";  
 }
 
-void apMode(){
+void apMode(uint32_t channel){
   
   WiFi.mode(WIFI_AP);
 
@@ -416,28 +416,28 @@ void apMode(){
   macID.toUpperCase();
 
   
-  WiFi.softAP(AP_NameString, AP_PassString);
+  WiFi.softAP(AP_NameString, AP_PassString, channel);
 
-  while ( WiFi.softAPgetStationNum() < 1) {  // Wait for the Wi-Fi to connect 
-  delay(250);
-  setupOutput();
-  int buttonState = digitalRead(2);
-  if( buttonState == 0 && buttonStateC == 1){
-  buttonStateC=0;
-  armControl = 1;
-  flyMode_2 = 1;
-  flyMode_3 = 1;
-  delay(2000);
-  break;
-  }
-  }
+  // while ( WiFi.softAPgetStationNum() < 1) {  // Wait for the Wi-Fi to connect 
+  //   delay(250);
+  //   setupOutput();
+  //   int buttonState = digitalRead(2);
+  //   if( buttonState == 0 && buttonStateC == 1){
+  //     buttonStateC=0;
+  //     armControl = 1;
+  //     flyMode_2 = 1;
+  //     flyMode_3 = 1;
+  //     delay(2000);
+  //     break;
+  //   }
+  // }
 }
 
-void staMode(){
+void staMode(uint32_t channel){
 
     WiFi.mode(WIFI_AP_STA);  
   
-    WiFi.begin(AP_NameString, AP_PassString);
+    WiFi.begin(AP_NameString, AP_PassString, channel);
 
 
   while (WiFi.status() != WL_CONNECTED ) {
@@ -458,7 +458,7 @@ void staMode(){
   
 }
 
-void startWiFi() { // Start a Wi-Fi access point, and try to connect to some given access points. Then wait for either an AP or STA connection
+void startWiFi(uint32_t channel) { // Start a Wi-Fi access point, and try to connect to some given access points. Then wait for either an AP or STA connection
 
   wifiMode = EEPROM.read(100);
   
@@ -471,11 +471,11 @@ void startWiFi() { // Start a Wi-Fi access point, and try to connect to some giv
   #endif 
 
   if(wifiMode ==0){
-  staMode();
+  staMode(channel);
   }else if(wifiMode = 1){
-  apMode();
+  apMode(channel);
   }else{
-  apMode(); 
+  apMode(channel); 
   }
 /*
    if (!MDNS.begin("espcopter")) {
@@ -788,11 +788,11 @@ void getRX(){
 
 
 
-void setupWiFi(){  
+void setupWiFi(uint32_t channel){  
 
   startSPIFFS();               // Start the SPIFFS and list all contents
 
-  startWiFi();                 // Start a Wi-Fi access point, and try to connect to some given access points. Then wait for either an AP or STA connection
+  startWiFi(channel);                 // Start a Wi-Fi access point, and try to connect to some given access points. Then wait for either an AP or STA connection
   
   startWebSocket();            // Start a WebSocket server
 
